@@ -1,0 +1,148 @@
+================================================================================
+WALKTHROUGH — CMPE 258 Neural Network Assignment
+Each section: < 5 minutes to read/understand
+================================================================================
+
+SHARED SETUP (all notebooks)
+-----------------------------
+Equation:  y = 3*x1^2 + 2*sin(pi*x2)*x3 - x3^3 + 0.5*x1*x2 + 1
+Data:      500 samples, 3 inputs (x1,x2,x3), 1 output (y)
+Network:   Input(3) -> 64 neurons -> 32 neurons -> 16 neurons -> 1 output
+           (3 hidden layers, extending reference colab's 1-2 layers)
+
+================================================================================
+COLAB A — NumPy + tf.einsum (From Scratch)
+================================================================================
+
+WHAT:  Pure NumPy neural network with manual backpropagation.
+       Uses tf.einsum('ij,jk->ik', A, B) instead of A @ B for all matmul.
+
+HOW IT WORKS:
+  1. Each layer is a Python class with __call__ (forward) and backward() methods
+  2. LinearLayer stores input during forward, computes weight/bias/input gradients
+     during backward using the chain rule
+  3. Activations: ReLU (layer 1), Tanh (layer 2), Sigmoid (layer 3)
+  4. Training loop: forward -> loss -> loss.backward -> model.backward -> update
+
+KEY CODE PATTERN:
+  # Forward:  output = einsum_matmul(input, weights) + bias
+  # Backward: grad_weights = einsum_matmul(input.T, grad_output)
+  #           grad_input  = einsum_matmul(grad_output, weights.T)
+
+VISUALIZATION:
+  - 4D plot: 3D scatter (x1,x2,x3) with y as color
+  - PCA: reduce 3 inputs to 2 components, color by y
+  - t-SNE: alternative nonlinear dimensionality reduction
+  - Loss curve + predicted vs true scatter + residual histogram
+
+WHY 3 LAYERS MATTERS:
+  Reference colab uses 1 hidden layer (Input->Hidden->Output).
+  We use 3 hidden layers, requiring the backward() chain to propagate
+  through: output -> sigmoid -> linear3 -> tanh -> linear2 -> relu -> linear1
+
+================================================================================
+COLAB B — PyTorch From Scratch (No Built-in Layers)
+================================================================================
+
+WHAT:  Same network but weights are raw PyTorch tensors (no nn.Linear).
+       Uses PyTorch autograd for gradient computation.
+
+HOW IT WORKS:
+  1. Weights created with torch.randn(..., requires_grad=True)
+  2. Forward pass: z1 = X @ W1 + b1; a1 = torch.relu(z1); ...
+  3. loss.backward() computes all gradients automatically
+  4. Manual SGD update inside torch.no_grad() block
+
+KEY DIFFERENCE FROM COLAB A:
+  - No manual backward() implementation needed (autograd handles it)
+  - But NO nn.Linear, NO nn.Module, NO optimizer classes
+
+KEY CODE PATTERN:
+  loss.backward()
+  with torch.no_grad():
+      for p in params:
+          p -= lr * p.grad
+          p.grad.zero_()
+
+================================================================================
+COLAB C — PyTorch Class-Based (Built-in Modules)
+================================================================================
+
+WHAT:  Standard PyTorch with nn.Module, nn.Linear, nn.ReLU, optim.Adam.
+
+HOW IT WORKS:
+  1. Model class inherits nn.Module
+  2. nn.Sequential chains layers: Linear(3,64), ReLU(), Linear(64,32), ...
+  3. optimizer.zero_grad() -> loss.backward() -> optimizer.step()
+  4. He initialization via nn.init.kaiming_normal_
+
+KEY DIFFERENCE FROM COLAB B:
+  - Everything wrapped in clean classes
+  - Adam optimizer (adaptive learning rate) instead of manual SGD
+  - model.train() / model.eval() for proper behavior
+
+STRUCTURE:
+  class DeepNet3Layer(nn.Module):
+      __init__: define layers
+      forward:  return self.network(x)
+
+================================================================================
+COLAB D — PyTorch Lightning
+================================================================================
+
+WHAT:  Same model refactored into Lightning framework.
+
+HOW IT WORKS:
+  1. LightningModule: defines model + training_step + configure_optimizers
+  2. LightningDataModule: handles data loading + train/val split
+  3. Trainer: handles everything else (epochs, GPU, logging, early stopping)
+
+KEY ADDITIONS vs COLAB C:
+  - save_hyperparameters() for reproducibility
+  - self.log('train_loss', loss) for automatic logging
+  - EarlyStopping callback (patience=30)
+  - Clean separation: model logic vs training loop vs data loading
+
+STRUCTURE:
+  model = DeepNet3LayerLit()
+  dm = RegressionDataModule(X, y)
+  trainer = pl.Trainer(max_epochs=500, callbacks=[EarlyStopping(...)])
+  trainer.fit(model, dm)
+
+================================================================================
+COLAB E — TensorFlow Variants (3-in-1)
+================================================================================
+
+Three implementations in ONE notebook, using the same data and architecture.
+
+PART (i) — Low-Level TF:
+  - tf.Variable for weights, tf.GradientTape for gradients
+  - Manual forward pass: tf.matmul(X, W) + b, tf.nn.relu(...)
+  - Manual SGD: p.assign_sub(lr * grad)
+  - Most similar to Colab A but using TF instead of NumPy
+
+PART (ii) — Keras Sequential:
+  - tf.keras.Sequential([Dense(64,'relu'), Dense(32,'tanh'), ...])
+  - model.compile(optimizer='adam', loss='mse')
+  - model.fit(X, y, epochs=500, validation_split=0.2)
+  - Simplest API — 5 lines to define + train
+
+PART (iii) — Keras Functional:
+  - inputs = keras.Input(shape=(3,))
+  - x = Dense(64, 'relu')(inputs)
+  - model = keras.Model(inputs=inputs, outputs=outputs)
+  - Same compile/fit as Sequential
+  - More flexible: supports multi-input/output, skip connections
+
+END OF NOTEBOOK: side-by-side comparison of loss curves + R² scores + 4D plots
+for all three variants.
+
+================================================================================
+QUICK REFERENCE: What to look at in each notebook
+================================================================================
+
+Colab A: Sections 5-7 (building blocks, model class, training loop)
+Colab B: Sections 4-6 (weight init, forward function, training loop)
+Colab C: Sections 3-4 (model class, training)
+Colab D: Sections 3-5 (DataModule, LightningModule, Trainer)
+Colab E: Parts (i), (ii), (iii) — each self-contained, compare at end

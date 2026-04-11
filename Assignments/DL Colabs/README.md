@@ -2,6 +2,8 @@
 
 CMPE-258 Deep Learning course assignment notebooks covering mathematical foundations, neural network implementations from scratch, and framework-specific tutorials.
 
+[Video Walkthrough](https://drive.google.com/drive/folders/1IOJoDg1IacaJoL4seASsLKasCd8rb3Q3?usp=sharing)
+
 ## Math Foundations
 
 | Notebook | Description |
