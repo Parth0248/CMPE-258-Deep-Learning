@@ -1,7 +1,6 @@
 # 🧠 Sequence Models, Graphs & Vision Transformers — Deep Learning Tutorials
 
-> **Course:** CMPE 258 — Deep Learning, San José State University  
-> **Assignment:** RNNs & Beyond  
+> **Topics:** RNNs & Beyond  
 > [**Video Walkthrough**](https://drive.google.com/drive/folders/1FrlnZEKTrMKE3s9V64vL3kuZEyfvgblZ?usp=sharing)
 
 
@@ -122,18 +121,6 @@ transformers, scikit-learn, seaborn
 
 ---
 
-## 🎥 Video Walkthroughs
-
-Each notebook has a companion ~5-minute walkthrough script located in the `scripts/` directory:
-
-| Notebook | Script |
-|----------|--------|
-| RNN / LSTM / GRU / WaveNet | [`scripts/walkthrough_rnn_lstm_gru_wavenet.md`](scripts/walkthrough_rnn_lstm_gru_wavenet.md) |
-| 10 Years of NLP | [`scripts/walkthrough_nlp_10_years.md`](scripts/walkthrough_nlp_10_years.md) |
-| GNN Fundamentals | [`scripts/walkthrough_gnn_fundamentals.md`](scripts/walkthrough_gnn_fundamentals.md) |
-| Vision Transformers | [`scripts/walkthrough_vision_transformers.md`](scripts/walkthrough_vision_transformers.md) |
-
----
 
 ## 📂 Repository Structure
 
@@ -144,11 +131,6 @@ RNNs/
 ├── Final_nlp_deep_learning_10_years_tutorial.ipynb  # Notebook 2: NLP Evolution
 ├── Final_gnn_fundamentals_tutorial.ipynb            # Notebook 3: Graph Neural Networks
 ├── Final_vision_transformers_tutorial.ipynb          # Notebook 4: Vision Transformers
-└── scripts/
-    ├── walkthrough_rnn_lstm_gru_wavenet.md           # 5-min video script
-    ├── walkthrough_nlp_10_years.md                   # 5-min video script
-    ├── walkthrough_gnn_fundamentals.md               # 5-min video script
-    └── walkthrough_vision_transformers.md            # 5-min video script
 ```
 
 ---
