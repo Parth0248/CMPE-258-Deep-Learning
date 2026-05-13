@@ -34,7 +34,10 @@ We have successfully completed the data collection phase and are currently train
 [Video Walkthrough](https://drive.google.com/drive/folders/1S924bz5uboDPCXV--rfOmjkMBvwWO366?usp=sharing)
 
 ## Slides
-[SLIDES](https://docs.google.com/presentation/d/1H2IRfr87PwfkLHKHqqXVxX7lhI-HNKYNH8c8XfSi2hw/edit?usp=sharing)
+[SLIDES](https://docs.google.com/presentation/d/11Rk4VceizbXX-nB_n8-dLRNVTLcw6sYoC8iaaKeWuZM/edit?usp=sharing)
 
 ## Training Colab
 [Colab Notebook](https://colab.research.google.com/drive/1ZjLUndn38EbxCt_Cm8QCe3jcC6o2SEg2?usp=sharing)
+
+## MgACT Policy REPO
+[Repo Link](https://github.com/Parth0248/mg-act-v2-cable-insertion)
